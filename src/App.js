@@ -1,6 +1,9 @@
 import "./App.css";
-import { useState } from "react";
+import React, { Component }  from 'react';
+import { useEffect, useState } from "react";
+
 import bakeryData from "./assets/bakery-data.json";
+import BakeryItem from './components/BakeryItem';
 
 /* ####### DO NOT TOUCH -- this makes the image URLs work ####### */
 bakeryData.forEach((item) => {
@@ -9,20 +12,42 @@ bakeryData.forEach((item) => {
 /* ############################################################## */
 
 function App() {
-  // TODO: use useState to create a state variable to hold the state of the cart
+  // use useState to create a state variable to hold the state of the cart
   /* add your cart state code here */
+
+    useEffect(() => {
+        let total = 0;
+        cart.forEach(element => total = total + element.price);
+        setTot(total);
+    })
+
+    const [tot, setTot] = useState(0);
+    const [cart, setCart] = useState([]);
 
   return (
     <div className="App">
-      <h1>My Bakery</h1> {/* TODO: personalize your bakery (if you want) */}
+      <h1>Johnny's Bakery</h1> {/* personalize your bakery (if you want) */}
 
-      {bakeryData.map((item, index) => ( // TODO: map bakeryData to BakeryItem components
-        <p>Bakery Item {index}</p> // replace with BakeryItem component
-      ))}
+      <div className="flex-center">
+          <div>
+              <h2>Cart</h2>
+              {cart.map((a, index) =>
+                  <p key={index}>{a.name}</p>)}
+              <h4>Total Cost: ${Math.round(tot)}</h4>
+          </div>
 
-      <div>
-        <h2>Cart</h2>
-        {/* TODO: render a list of items in the cart */}
+          <div >
+              {bakeryData.map((item, index) => ( // map bakeryData to BakeryItem components
+                  // replace with BakeryItem component
+                  <BakeryItem item={item}
+                              updateCart={setCart}
+                              total={tot}
+                              setTotal={setTot}
+                              key={index}
+                              cart={cart}/>
+              ))}
+
+          </div>
       </div>
     </div>
   );
